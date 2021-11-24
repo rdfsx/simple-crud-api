@@ -1,14 +1,15 @@
-import {PersonModel, Persons} from "../models/person.js";
+import {PersonModel} from "../models/person.js";
+import {add, db} from "../db.js";
 
 
 export default class PersonController {
     async getPersons() {
-        return new Promise((resolve, _) => resolve(Persons));
+        return new Promise((resolve, _) => resolve(db));
     }
 
     async getPerson(id) {
         return new Promise((resolve, reject) => {
-            let person = Persons.find((person) => person.id === id);
+            let person = db.find((person) => person.id === id);
             if (person) {
                 resolve(person);
             } else {
@@ -20,31 +21,29 @@ export default class PersonController {
     async createPerson(person) {
         return new Promise((resolve, _) => {
             let newPerson = PersonModel(person);
-            Persons.push(newPerson);
+            add(newPerson);
             resolve(newPerson);
         });
     }
 
-    async updatePerson(id, person) {
+    async updatePerson(id, newPerson) {
         return new Promise((resolve, reject) => {
-            let person = Persons.find((person) => person.id === id);
-            if (!person) {
+            let personIndex = db.findIndex((person) => person.id === id);
+            if (personIndex < 0) {
                 reject(`No persons with id ${id} found`);
             }
-            const index = Persons.indexOf(person);
-            let updatedPerson = Object.assign(Persons[index], person);
+            let updatedPerson = Object.assign(db[personIndex], newPerson);
             resolve(updatedPerson);
         });
     }
 
     async deletePerson(id) {
         return new Promise((resolve, reject) => {
-            let person = Persons.find((person) => person.id === id);
-            if (!person) {
+            let personIndex = db.findIndex((person) => person.id === id);
+            if (personIndex < 0) {
                 reject(`No person with id ${id} found`);
             }
-            const index = Persons.indexOf(person);
-            delete Persons[index];
+            delete db[personIndex];
             resolve(`Person deleted successfully`);
         });
     }
