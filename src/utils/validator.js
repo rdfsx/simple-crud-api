@@ -1,4 +1,4 @@
-export default function validatePerson(person) {
+export function validatePerson(person) {
     if (typeof person !== 'object') {
         throw new Error('Person must be an object');
     }
@@ -19,7 +19,3 @@ export default function validatePerson(person) {
     }
     return true;
 }
-
-// console.log(JSON.stringify(Object.keys({name: "a", age: 5, hobbies: ["a", "b"]}).sort()) === JSON.stringify([ 'age', 'hobbies', 'name' ]));
-
-// validatePerson({name: 'her', age: 5, hobbies: ['a', 5]});

@@ -28,11 +28,11 @@ export default class PersonController {
 
     async updatePerson(id, newPerson) {
         return new Promise((resolve, reject) => {
-            let personIndex = db.findIndex((person) => person.id === id);
-            if (personIndex < 0) {
+            let person = db.find((person) => person.id === id);
+            if (!person) {
                 reject(`No persons with id ${id} found`);
             }
-            let updatedPerson = Object.assign(db[personIndex], newPerson);
+            let updatedPerson = Object.assign(db[db.indexOf(person)], newPerson);
             resolve(updatedPerson);
         });
     }
@@ -43,7 +43,7 @@ export default class PersonController {
             if (personIndex < 0) {
                 reject(`No person with id ${id} found`);
             }
-            delete db[personIndex];
+            db.splice(personIndex, 1);
             resolve(`Person deleted successfully`);
         });
     }
