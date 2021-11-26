@@ -7,13 +7,11 @@ module.exports = {
     output: {
         path: path.resolve(__dirname, './dist'),
         filename: '[name].bundle.js',
+        module: true
     },
-    target: "node",
-    // devServer: {
-    //     static: {
-    //         directory: path.join(__dirname, 'public'),
-    //     },
-    //     compress: true,
-    //     port: 3000,
-    // },
+    experiments: {
+        outputModule: true,
+    },
+    target: "node16.13",
+    mode: "production",
 }
