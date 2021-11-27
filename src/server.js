@@ -10,17 +10,14 @@ export const server = http.createServer(async (req, res) => {
     let statusCode = 0;
 
     try {
-        if(res.url === "/") {
-            res.statusCode = 302;
-            res.setHeader("Location", "/person");
-        } else if (req.url.match(UUID_REGEX) && req.method === "GET") {
+        if (req.url.match(UUID_REGEX) && req.method === "GET") {
             try {
                 const id = req.url.split("/")[2];
                 let person = await new PersonController().getPerson(id);
                 res.writeHead(200, { "Content-Type": "application/json" });
                 res.end(JSON.stringify(person));
             } catch (e) {
-                res.writeHead(statusCode || 400, {"Content-Type": "application/json"});
+                res.writeHead(statusCode || 404, {"Content-Type": "application/json"});
                 res.end(JSON.stringify({message: e.message || e}));
             }
         } else if (req.url.match(UUID_REGEX) && req.method === "PUT") {
@@ -32,14 +29,14 @@ export const server = http.createServer(async (req, res) => {
                 res.writeHead(200, {"Content-Type": "application/json"});
                 res.end(JSON.stringify(updatedPerson));
             } catch (e) {
-                res.writeHead(statusCode || 400, {"Content-Type": "application/json"});
+                res.writeHead(statusCode || 404, {"Content-Type": "application/json"});
                 res.end(JSON.stringify({message: e.message || e}));
             }
         } else if (req.url.match(UUID_REGEX) && req.method === "DELETE") {
             try {
                 const id = req.url.split("/")[2];
                 let updatedPerson = await new PersonController().deletePerson(id);
-                res.writeHead(200, {"Content-Type": "application/json"});
+                res.writeHead(204, {"Content-Type": "application/json"});
                 res.end(JSON.stringify(updatedPerson));
             } catch (e) {
                 res.writeHead(404, {"Content-Type": "application/json"});
@@ -62,7 +59,7 @@ export const server = http.createServer(async (req, res) => {
                 res.end(JSON.stringify({message: e.message || e}));
             }
         } else if (req.url.match(/\/person\/(.*)/)){
-            res.writeHead(404, {"Content-Type": "application/json"});
+            res.writeHead(400, {"Content-Type": "application/json"});
             res.end(JSON.stringify({message: "Person id must be uuid"}));
         } else {
             res.statusCode = 404;
@@ -70,7 +67,7 @@ export const server = http.createServer(async (req, res) => {
         }
     } catch (e) {
         res.statusCode = 500;
-        res.write("An unexpected exception was thrown");
+        res.write(`An unexpected exception was thrown: ${e.message}`);
     }
 
     res.end();
