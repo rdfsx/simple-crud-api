@@ -6,10 +6,6 @@
   "type": "module",
   "main": "./index.js",
   "devDependencies": {
-    "@babel/cli": "^7.16.0",
-    "@babel/core": "^7.16.0",
-    "@babel/preset-env": "^7.16.4",
-    "babel-jest": "^27.3.1",
     "jest": "^27.3.1",
     "uuid": "^8.3.2",
     "webpack": "^5.64.3",
@@ -20,10 +16,5 @@
     "test": "jest",
     "start:dev": "nodemon ./index.js",
     "start:prod": "webpack && node ./dist/main.bundle.js"
-  },
-  "jest": {
-    "transform": {
-      "^.+\\.jsx?$": "babel-jest"
-    }
   }
 }

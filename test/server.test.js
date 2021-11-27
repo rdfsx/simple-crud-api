@@ -1,5 +1,4 @@
 const http = require('http');
-const {deleteAll} = require("../src/db");
 const options = {
   hostname: 'localhost',
   port: 3000,
@@ -14,7 +13,6 @@ const person = {
 describe('API test', () => {
   let personId = '';
   let personCheck = {};
-  deleteAll();
 
   it('Should return empty array', done => {
     options.method = 'GET';
@@ -103,12 +101,8 @@ describe('API test', () => {
       'Content-Type': 'application/json'
     };
     const req = http.request(options, res => {
-      expect(res.statusCode).toBe(200);
-      res.on('data', d => {
-        let deleteMessage = JSON.parse(d);
-        expect(deleteMessage).toEqual('Person deleted successfully');
-        done();
-      });
+      expect(res.statusCode).toBe(204);
+      done();
     });
     req.end();
   });
@@ -117,7 +111,7 @@ describe('API test', () => {
     options.method = 'GET';
     options.path = `/person/${personId}`;
     const req = http.request(options, res => {
-      expect(res.statusCode).toBe(400);
+      expect(res.statusCode).toBe(404);
       res.on('data', d => {
         expect(JSON.parse(d)).toEqual({
           "message": `Person with id ${personId} not found `
