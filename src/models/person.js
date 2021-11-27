@@ -6,8 +6,3 @@ export let PersonModel = ({name, age, hobbies}) => ({
     age: age,
     hobbies: hobbies,
 });
-
-// let person = PersonModel({name: 'John', age: 30, hobbies: ['coding', 'cooking']});
-// console.log(person);
-// let updatedPerson = Object.assign(person, {name: "Misha"});
-// console.log(updatedPerson);
