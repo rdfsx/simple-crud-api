@@ -25,17 +25,23 @@ export const server = http.createServer(async (req, res) => {
                 }
             }
         } else if (req.url.match(UUID_REGEX) && req.method === "PUT") {
+            let statusCode = 0;
             try {
                 const id = req.url.split("/")[2];
                 const data = await getReqData(req);
                 const personData = JSON.parse(data);
-                validatePerson(personData);
+                try {
+                    validatePerson(personData);
+                } catch (e) {
+                    statusCode = 400;
+                    throw e;
+                }
                 let updatedPerson = await new PersonController().updatePerson(id, personData);
                 res.writeHead(200, {"Content-Type": "application/json"});
                 res.end(JSON.stringify(updatedPerson));
             } catch (e) {
                 if (e instanceof ControllerError) {
-                    res.writeHead(404, {"Content-Type": "application/json"});
+                    res.writeHead(statusCode || 404, {"Content-Type": "application/json"});
                     res.end(JSON.stringify({message: e.message || e}));
                 } else {
                     throw e;
