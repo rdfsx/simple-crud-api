@@ -17,7 +17,7 @@ LTS version of Node.js (16.13.0)
 {
   "name": string,
   "age": number,
-  "hobbies": [array of string]
+  "hobbies": [array of string or empty array]
 }
 `
 6. You can make POST, PUT, GET and DELETE requests.
