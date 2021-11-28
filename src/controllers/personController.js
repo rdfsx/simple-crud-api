@@ -1,5 +1,6 @@
 import {PersonModel} from "../models/person.js";
 import {add, db} from "../db.js";
+import {ControllerError} from "../errors/controller.js";
 
 
 export default class PersonController {
@@ -13,7 +14,7 @@ export default class PersonController {
             if (person) {
                 resolve(person);
             } else {
-                reject(`Person with id ${id} not found `);
+                reject(new ControllerError(`Person with id ${id} not found `));
             }
         });
     }
@@ -30,7 +31,7 @@ export default class PersonController {
         return new Promise((resolve, reject) => {
             let person = db.find((person) => person.id === id);
             if (!person) {
-                reject(`No persons with id ${id} found`);
+                reject(new ControllerError(`Person with id ${id} not found `));
             }
             let updatedPerson = Object.assign(db[db.indexOf(person)], newPerson);
             resolve(updatedPerson);
@@ -41,7 +42,7 @@ export default class PersonController {
         return new Promise((resolve, reject) => {
             let personIndex = db.findIndex((person) => person.id === id);
             if (personIndex < 0) {
-                reject(`No person with id ${id} found`);
+                reject(new ControllerError(`Person with id ${id} not found `));
             }
             db.splice(personIndex, 1);
             resolve(`Person deleted successfully`);

@@ -1,8 +1,13 @@
 const http = require('http');
+const {deleteAll} = require("../src/db");
+require('dotenv').config();
 const options = {
   hostname: 'localhost',
-  port: 3000,
+  port: process.env.PORT,
   path: '/person',
+  headers: {
+    'Content-Type': 'application/json'
+  }
 }
 const person = {
   name: 'Johnny Doe',
@@ -10,9 +15,10 @@ const person = {
   hobbies: ['sport', 'cooking']
 }
 
-describe('API test', () => {
+describe('API test: first scenario', () => {
   let personId = '';
   let personCheck = {};
+  deleteAll();
 
   it('Should return empty array', done => {
     options.method = 'GET';
@@ -29,9 +35,6 @@ describe('API test', () => {
   it("Should create a new record and return it", done => {
     options.method = 'POST';
     options.path = '/person';
-    options.headers = {
-      'Content-Type': 'application/json'
-    }
 
     const data = new TextEncoder().encode(JSON.stringify(person));
     const req = http.request(options, res => {
@@ -52,6 +55,7 @@ describe('API test', () => {
   it('Should return person object', done => {
     options.method = 'GET';
     options.path = `/person/${personId}`;
+
     const req = http.request(options, res => {
       expect(res.statusCode).toBe(200);
       res.on('data', d => {
@@ -68,9 +72,6 @@ describe('API test', () => {
   it("Should update person", done => {
     options.method = 'PUT';
     options.path = `/person/${personId}`;
-    options.headers = {
-      'Content-Type': 'application/json'
-    }
 
     let updatedPerson = {
       name: 'Misha Doe',
@@ -97,9 +98,7 @@ describe('API test', () => {
   it('Should delete person object', done => {
     options.method = 'DELETE';
     options.path = `/person/${personId}`;
-    options.headers = {
-      'Content-Type': 'application/json'
-    };
+
     const req = http.request(options, res => {
       expect(res.statusCode).toBe(204);
       done();
